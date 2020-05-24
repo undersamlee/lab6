@@ -1,7 +1,7 @@
 Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
-| Date         : Sun May 24 19:29:33 2020
+| Date         : Sun May 24 19:48:29 2020
 | Host         : DESKTOP-ND0EAAT running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file vga_test_control_sets_placed.rpt
 | Design       : vga_test
@@ -24,7 +24,7 @@ Table of Contents
 |                          Status                          | Count |
 +----------------------------------------------------------+-------+
 | Number of unique control sets                            |    15 |
-| Unused register locations in slices containing registers |    62 |
+| Unused register locations in slices containing registers |    58 |
 +----------------------------------------------------------+-------+
 
 
@@ -50,11 +50,11 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |              68 |           28 |
+| No           | No                    | No                     |             104 |           40 |
 | No           | No                    | Yes                    |               4 |            3 |
 | No           | Yes                   | No                     |              29 |            9 |
-| Yes          | No                    | No                     |              25 |            7 |
-| Yes          | No                    | Yes                    |              20 |            9 |
+| Yes          | No                    | No                     |              25 |            9 |
+| Yes          | No                    | Yes                    |              20 |            7 |
 | Yes          | Yes                   | No                     |              24 |            6 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
@@ -67,19 +67,19 @@ Table of Contents
 +--------------------+-----------------------------------------+-----------------------------------------+------------------+----------------+
 |  clk_IBUF_BUFG     |                                         | nolabel_line76/TxD_i_1_n_0              |                1 |              1 |
 |  clk_IBUF_BUFG     |                                         | reset_IBUF                              |                3 |              4 |
-|  clk_IBUF_BUFG     | nolabel_line76/bitcounter[3]_i_2__0_n_0 | nolabel_line76/bitcounter[3]_i_1__0_n_0 |                1 |              4 |
 |  clk_IBUF_BUFG     | receiver_unit/bitcounter                | receiver_unit/bitcounter[3]_i_1_n_0     |                1 |              4 |
-|  vga_sync_unit/CLK |                                         |                                         |                3 |              6 |
-|  clk_IBUF_BUFG     | receiver_unit/direc10_out               |                                         |                3 |              6 |
-|  clk_IBUF_BUFG     | receiver_unit/rxshiftreg                |                                         |                2 |              9 |
-|  clk_IBUF_BUFG     | vga_sync_unit/CLK                       | reset_IBUF                              |                6 |             10 |
-|  clk_IBUF_BUFG     | vga_sync_unit/v_count_reg0              | reset_IBUF                              |                3 |             10 |
+|  clk_IBUF_BUFG     | nolabel_line76/bitcounter[3]_i_2__0_n_0 | nolabel_line76/bitcounter[3]_i_1__0_n_0 |                1 |              4 |
+|  vga_sync_unit/CLK |                                         |                                         |                4 |              6 |
+|  clk_IBUF_BUFG     | receiver_unit/direc10_out               |                                         |                4 |              6 |
+|  clk_IBUF_BUFG     | receiver_unit/rxshiftreg                |                                         |                3 |              9 |
 |  clk_IBUF_BUFG     | nolabel_line76/rightshiftreg            |                                         |                2 |             10 |
-|  clk_IBUF_BUFG     |                                         | nolabel_line76/counter[0]_i_1__0_n_0    |                4 |             14 |
+|  clk_IBUF_BUFG     | vga_sync_unit/CLK                       | reset_IBUF                              |                4 |             10 |
+|  clk_IBUF_BUFG     | vga_sync_unit/v_count_reg0              | reset_IBUF                              |                3 |             10 |
 |  clk_IBUF_BUFG     |                                         | receiver_unit/counter[0]_i_1_n_0        |                4 |             14 |
+|  clk_IBUF_BUFG     |                                         | nolabel_line76/counter[0]_i_1__0_n_0    |                4 |             14 |
 |  clk_IBUF_BUFG     | transmit1                               | receiver_unit/direc10_out               |                4 |             16 |
-|  newpic            |                                         |                                         |                6 |             20 |
-|  clk_IBUF_BUFG     |                                         |                                         |               19 |             42 |
+|  newpic_BUFG       |                                         |                                         |               13 |             37 |
+|  clk_IBUF_BUFG     |                                         |                                         |               23 |             61 |
 +--------------------+-----------------------------------------+-----------------------------------------+------------------+----------------+
 
 

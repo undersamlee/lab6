@@ -56,8 +56,8 @@ module vga_test
     wire [9:0] player_range,monster_range;
     wire [9:0] player_hp,monster_hp;
         
-    player p1 (player_x,player_y,direc,isAtaclk,player_x_next,player_y_next,player_range);
-    monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next,monster_range);
+    player p1 (player_x,player_y,direc,clk,player_x_next,player_y_next,player_range,player_hp);
+    monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next,monster_range,monster_hp);
     
         // instantiate vga_sync
         vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(Hsync), .vsync(Vsync),
@@ -131,7 +131,7 @@ module vga_test
             else if(isMonster)
             //else if(monster_x-monster_range < x && x < monster_x+monster_range && monster_y-monster_range < y && y < monster_y+monster_range)
                 rgb_reg <= 12'hFFF; //white
-            else if(100<x && x<100+player_hp && 370<y && y<380) //player_hp
+            else if(100<x && x<100+player_hp*4 && 370<y && y<380) //player_hp
                 rgb_reg <= 12'hFF0; //yellow
             else if(isHit && isHitPixel)
                 rgb_reg <= 12'hFAF;

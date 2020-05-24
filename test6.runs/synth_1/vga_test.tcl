@@ -40,6 +40,7 @@ read_verilog -library xil_defaultlib {
   D:/HWLAB/test6/test6.srcs/sources_1/new/new_receiver.v
   D:/HWLAB/test6/test6.srcs/sources_1/new/player.v
   D:/HWLAB/test6/test6.srcs/sources_1/new/monster.v
+  D:/HWLAB/test6/test6.srcs/sources_1/new/Keyboard.v
 }
 read_vhdl -library xil_defaultlib {
   D:/HWLAB/test6/test6.srcs/sources_1/new/Pixel_On_Text.vhd
