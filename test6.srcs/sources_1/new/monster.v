@@ -32,18 +32,28 @@ module monster(
         hp = 100;
     end
     
-    reg direc = 0; // 0->down, 1->up
+    reg direcX = 0; // 0->left, 1->right
+    reg direcY = 0; // 0->down, 1->up
     
     always @(posedge clk)
         begin
         x=x0;
         if(y0>=340-4)
-            direc = 0;
+            direcY = 0;
         else if(y0<=145+4)
-            direc = 1;
-        if (direc==0)
-            y=y0;
-        else if (direc==1)
-            y=y0;
+            direcY = 1;
+        if (direcY==0)
+            y=y0-4;
+        else if (direcY==1)
+            y=y0+4;
+            
+        if(x0>=420-4)
+            direcX = 0;
+        else if(x0<=225+4)
+            direcX = 1;
+        if (direcX==0)
+            x=x0-1;
+        else if (direcX==1)
+            x=x0+1;
         end
 endmodule

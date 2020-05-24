@@ -56,7 +56,7 @@ module vga_test
     wire [9:0] player_range,monster_range;
     wire [9:0] player_hp,monster_hp;
         
-    player p1 (player_x,player_y,direc,clk,player_x_next,player_y_next,player_range);
+    player p1 (player_x,player_y,direc,isAtaclk,player_x_next,player_y_next,player_range);
     monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next,monster_range);
     
         // instantiate vga_sync
@@ -75,6 +75,37 @@ module vga_test
         reg [15:0]counter;
         transmitter(RsTx, clk, 0, transmit, TxData);
         
+        wire isPlayer,isMonster,isHitPixel;
+        
+        reg isHit=0;
+        
+        Pixel_On_Text2 #(.displayText("*")) player_pixel(
+                clk,
+                player_x, // text position.x (top left)
+                player_y, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isPlayer  // result, 1 if current pixel is on text, 0 otherwise
+            );
+            
+        Pixel_On_Text2 #(.displayText("+")) monster_pixel(
+                clk,
+                monster_x, // text position.x (top left)
+                monster_y, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isMonster  // result, 1 if current pixel is on text, 0 otherwise
+            );
+        
+        Pixel_On_Text2 #(.displayText("HIT")) hit_pixel(
+                clk,
+                400, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isHitPixel  // result, 1 if current pixel is on text, 0 otherwise
+            );
+        
         //initialize
         initial
         begin
@@ -88,26 +119,40 @@ module vga_test
         // rgb buffer (color)
         always @(posedge p_tick)
         begin
-            //if ((player_range*player_range)>=(((x-player_x)*(x-player_x))+(((y-player_y)*(y-player_y))))) //player
-            if(player_x-player_range < x && x < player_x+player_range && player_y-player_range < y && y < player_y+player_range)
+            //if ((player_range*player_range)>(((x-player_x)*(x-player_x))+(((y-player_y)*(y-player_y))))) //player
+            if(isPlayer)
+            //else if(player_x-player_range < x && x < player_x+player_range && player_y-player_range < y && y < player_y+player_range)
                 rgb_reg <= 12'hF00; //red
             else if (((220<x && x<225) || (420<x && x<425)) && 140<y && y<345) //border
                 rgb_reg <= 12'hFFF; //white
             else if (((140<y && y<145) || (340<y && y<345)) && 220<x && x<425) //border
                 rgb_reg <= 12'hFFF; //white
-            //else if ((monster_range*monster_range)>=(((x-monster_x)*(x-monster_x))+(((y-monster_y)*(y-monster_y))))) //monster
-            else if(monster_x-monster_range < x && x < monster_x+monster_range && monster_y-monster_range < y && y < monster_y+monster_range)
+            //else if ((monster_range*monster_range)>(((x-monster_x)*(x-monster_x))+(((y-monster_y)*(y-monster_y))))) //monster
+            else if(isMonster)
+            //else if(monster_x-monster_range < x && x < monster_x+monster_range && monster_y-monster_range < y && y < monster_y+monster_range)
                 rgb_reg <= 12'hFFF; //white
+            else if(100<x && x<100+player_hp && 370<y && y<380) //player_hp
+                rgb_reg <= 12'hFF0; //yellow
+            else if(isHit && isHitPixel)
+                rgb_reg <= 12'hFAF;
             else //blackground
                 rgb_reg <= 12'h000; //black
         end
         
         //newpic oscillator
         always @(posedge p_tick)
-        if (x==0 && y==0)
-            newpic=1;
-        else
-            newpic=0;
+        begin
+            if (x==0 && y==0)
+            begin
+                newpic <= 1;
+                isHit <= 0;
+            end
+            else
+                newpic <= 0;
+            
+            if(isPlayer && isMonster)
+                isHit <= 1;
+        end
             
         //move
         always @(posedge newpic)
@@ -144,14 +189,7 @@ module vga_test
                 begin
                 transmit = 0;
                 end
-            //if((player_x - monster_x)**2 + (player_y-monster_y)**2 > (player_range+monster_range)**2)
-            if((player_x-player_range < monster_x+monster_range) && (player_y-player_range < monster_y+monster_range))
-                dp = 1;
-            else if((player_x > monster_x) && (player_y < monster_y))
-                dp = 1;
-            else if((player_x < monster_x) && (player_y > monster_y))
-                dp = 1;
-            else if((player_x > monster_x) && (player_y > monster_y))
+            if(isHit)
                 dp = 1;
             else
                 dp = 0;

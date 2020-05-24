@@ -41,6 +41,14 @@ read_verilog -library xil_defaultlib {
   D:/HWLAB/test6/test6.srcs/sources_1/new/player.v
   D:/HWLAB/test6/test6.srcs/sources_1/new/monster.v
 }
+read_vhdl -library xil_defaultlib {
+  D:/HWLAB/test6/test6.srcs/sources_1/new/Pixel_On_Text.vhd
+  D:/HWLAB/test6/test6.srcs/sources_1/new/commonPak.vhd
+  D:/HWLAB/test6/test6.srcs/sources_1/new/Font_Rom.vhd
+  D:/HWLAB/test6/test6.srcs/sources_1/new/Pixel_On_Text2.vhd
+  D:/HWLAB/test6/test6.srcs/sources_1/new/Font_Rom2.vhd
+  D:/HWLAB/test6/test6.srcs/sources_1/new/Wrapper.vhd
+}
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
 # design are intentionally left as such for best results. Dcp files will be
