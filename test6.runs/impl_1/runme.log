@@ -566,3 +566,245 @@ Writing XDEF routing logical nets.
 Writing XDEF routing special nets.
 Write XDEF Complete: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.137 . Memory (MB): peak = 1384.723 ; gain = 0.000
 Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1384.723 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'D:/HWLAB/test6/test6.runs/impl_1/vga_test_placed.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_io -file vga_test_io_placed.rpt
+report_io: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.056 . Memory (MB): peak = 1384.723 ; gain = 0.000
+INFO: [runtcl-4] Executing : report_utilization -file vga_test_utilization_placed.rpt -pb vga_test_utilization_placed.pb
+INFO: [runtcl-4] Executing : report_control_sets -verbose -file vga_test_control_sets_placed.rpt
+report_control_sets: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 1384.723 ; gain = 0.000
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 2 CPUs
+Checksum: PlaceDB: 869dda2a ConstDB: 0 ShapeSum: c434d074 RouteDB: 0
+
+Phase 1 Build RT Design
+Phase 1 Build RT Design | Checksum: 1386d5169
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:27 . Memory (MB): peak = 1384.723 ; gain = 0.000
+Post Restoration Checksum: NetGraph: ca3da3dd NumContArr: 6e2fad8c Constraints: 0 Timing: 0
+
+Phase 2 Router Initialization
+
+Phase 2.1 Create Timer
+Phase 2.1 Create Timer | Checksum: 1386d5169
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:27 . Memory (MB): peak = 1408.387 ; gain = 23.664
+
+Phase 2.2 Fix Topology Constraints
+Phase 2.2 Fix Topology Constraints | Checksum: 1386d5169
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:27 . Memory (MB): peak = 1414.414 ; gain = 29.691
+
+Phase 2.3 Pre Route Cleanup
+Phase 2.3 Pre Route Cleanup | Checksum: 1386d5169
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:27 . Memory (MB): peak = 1414.414 ; gain = 29.691
+ Number of Nodes with overlaps = 0
+
+Phase 2.4 Update Timing
+Phase 2.4 Update Timing | Checksum: 158dd45c3
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:27 . Memory (MB): peak = 1425.680 ; gain = 40.957
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=3.539  | TNS=0.000  | WHS=-0.091 | THS=-1.692 |
+
+Phase 2 Router Initialization | Checksum: 1e93a2267
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:27 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 3 Initial Routing
+Phase 3 Initial Routing | Checksum: 1a1da8e29
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 4 Rip-up And Reroute
+
+Phase 4.1 Global Iteration 0
+ Number of Nodes with overlaps = 20
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=3.560  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 4.1 Global Iteration 0 | Checksum: 1478c72ac
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+Phase 4 Rip-up And Reroute | Checksum: 1478c72ac
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 5 Delay and Skew Optimization
+
+Phase 5.1 Delay CleanUp
+
+Phase 5.1.1 Update Timing
+Phase 5.1.1 Update Timing | Checksum: dd034d18
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=3.639  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 5.1 Delay CleanUp | Checksum: dd034d18
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 5.2 Clock Skew Optimization
+Phase 5.2 Clock Skew Optimization | Checksum: dd034d18
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+Phase 5 Delay and Skew Optimization | Checksum: dd034d18
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: 13cb6e2d5
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=3.639  | TNS=0.000  | WHS=0.173  | THS=0.000  |
+
+Phase 6.1 Hold Fix Iter | Checksum: b2df133f
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+Phase 6 Post Hold Fix | Checksum: b2df133f
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 7 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0.0950331 %
+  Global Horizontal Routing Utilization  = 0.100469 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 7 Route finalize | Checksum: 18d3e9d35
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 8 Verifying routed nets
+
+ Verification completed successfully
+Phase 8 Verifying routed nets | Checksum: 18d3e9d35
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 9 Depositing Routes
+Phase 9 Depositing Routes | Checksum: 23cb3287f
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Phase 10 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=3.639  | TNS=0.000  | WHS=0.173  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 10 Post Router Timing | Checksum: 23cb3287f
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+INFO: [Route 35-16] Router Completed Successfully
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:28 . Memory (MB): peak = 1425.680 ; gain = 40.957
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+77 Infos, 86 Warnings, 64 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:32 ; elapsed = 00:00:29 . Memory (MB): peak = 1425.680 ; gain = 40.957
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1425.680 ; gain = 0.000
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1425.680 ; gain = 0.000
+Write XDEF Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.130 . Memory (MB): peak = 1425.680 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'D:/HWLAB/test6/test6.runs/impl_1/vga_test_routed.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_drc -file vga_test_drc_routed.rpt -pb vga_test_drc_routed.pb -rpx vga_test_drc_routed.rpx
+Command: report_drc -file vga_test_drc_routed.rpt -pb vga_test_drc_routed.pb -rpx vga_test_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Coretcl 2-168] The results of DRC are in file D:/HWLAB/test6/test6.runs/impl_1/vga_test_drc_routed.rpt.
+report_drc completed successfully
+INFO: [runtcl-4] Executing : report_methodology -file vga_test_methodology_drc_routed.rpt -pb vga_test_methodology_drc_routed.pb -rpx vga_test_methodology_drc_routed.rpx
+Command: report_methodology -file vga_test_methodology_drc_routed.rpt -pb vga_test_methodology_drc_routed.pb -rpx vga_test_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 2 threads
+INFO: [Coretcl 2-1520] The results of Report Methodology are in file D:/HWLAB/test6/test6.runs/impl_1/vga_test_methodology_drc_routed.rpt.
+report_methodology completed successfully
+INFO: [runtcl-4] Executing : report_power -file vga_test_power_routed.rpt -pb vga_test_power_summary_routed.pb -rpx vga_test_power_routed.rpx
+Command: report_power -file vga_test_power_routed.rpt -pb vga_test_power_summary_routed.pb -rpx vga_test_power_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+89 Infos, 86 Warnings, 64 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+INFO: [runtcl-4] Executing : report_route_status -file vga_test_route_status.rpt -pb vga_test_route_status.pb
+INFO: [runtcl-4] Executing : report_timing_summary -max_paths 10 -file vga_test_timing_summary_routed.rpt -pb vga_test_timing_summary_routed.pb -rpx vga_test_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [runtcl-4] Executing : report_incremental_reuse -file vga_test_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [runtcl-4] Executing : report_clock_utilization -file vga_test_clock_utilization_routed.rpt
+INFO: [runtcl-4] Executing : report_bus_skew -warn_on_violation -file vga_test_bus_skew_routed.rpt -pb vga_test_bus_skew_routed.pb -rpx vga_test_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+Command: write_bitstream -force vga_test.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+WARNING: [DRC CHECK-3] Report rule limit reached: REQP-1840 rule limit reached: 20 violations have been found.
+WARNING: [DRC PDRC-153] Gated clock check: Net vga_sync_unit/CLK is a gated clock net sourced by a combinational pin vga_sync_unit/h_count_reg[9]_i_1/O, cell vga_sync_unit/h_count_reg[9]_i_1. This is not good design practice and will likely impact performance. For SLICE registers, for example, use the CE pin to control the loading of data.
+WARNING: [DRC PLHOLDVIO-2] Non-Optimal connections which could lead to hold violations: A LUT vga_sync_unit/h_count_reg[9]_i_1 is driving clock pin of 6 cells. This could lead to large hold time violations. Involved cells are:
+isHit_reg, newpic_reg, rgb_reg_reg[11], rgb_reg_reg[3], rgb_reg_reg[6], and rgb_reg_reg[7]
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[12] (net: hit_pixel/FontRom/ADDRARDADDR[8]) which is driven by a register (vga_sync_unit/h_count_reg_reg[1]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[12] (net: hit_pixel/FontRom/ADDRARDADDR[8]) which is driven by a register (vga_sync_unit/h_count_reg_reg[4]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[12] (net: hit_pixel/FontRom/ADDRARDADDR[8]) which is driven by a register (vga_sync_unit/h_count_reg_reg[6]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[12] (net: hit_pixel/FontRom/ADDRARDADDR[8]) which is driven by a register (vga_sync_unit/h_count_reg_reg[8]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[0]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[1]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[2]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[3]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[4]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[5]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[6]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[7]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[8]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/h_count_reg_reg[9]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/v_count_reg_reg[4]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/v_count_reg_reg[5]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/v_count_reg_reg[6]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/v_count_reg_reg[7]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/v_count_reg_reg[8]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+WARNING: [DRC REQP-1840] RAMB18 async control check: The RAMB18E1 hit_pixel/FontRom/fontRow_reg has an input control pin hit_pixel/FontRom/fontRow_reg/ADDRARDADDR[13] (net: hit_pixel/FontRom/ADDRARDADDR[9]) which is driven by a register (vga_sync_unit/v_count_reg_reg[9]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+INFO: [Vivado 12-3199] DRC finished with 0 Errors, 23 Warnings
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+INFO: [Designutils 20-2272] Running write_bitstream with 2 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream ./vga_test.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Project 1-120] WebTalk data collection is mandatory when using a WebPACK part without a full Vivado license. To see the specific WebTalk data collected for your design, open the usage_statistics_webtalk.html or usage_statistics_webtalk.xml file in the implementation directory.
+INFO: [Common 17-83] Releasing license: Implementation
+108 Infos, 109 Warnings, 64 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 1851.668 ; gain = 399.832
+INFO: [Common 17-206] Exiting Vivado at Sun May 24 19:30:22 2020...
