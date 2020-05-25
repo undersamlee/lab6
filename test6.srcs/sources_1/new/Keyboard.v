@@ -30,14 +30,17 @@ module Keyboard(
 //	output reg TRIG_ARR,
 //	output reg [7:0]CODEWORD,
    output reg [7:0] led,	//8 LEDs
-   output wire RsTx,
-   output reg [7:0] data
+//   output reg [7:0] data
+   output wire RsTx
    );
+   
+	reg [1:0]receiveState;         //receive state of ps2data
+	reg [15:0]receiveCounter;
 
+    reg [7:0] data;
 	reg transmit;          //UART transmitter's transmit signal
-	reg [1:0]receiving;         //receiving ps2data or not (used when found F0 code)
+	reg [7:0]checkWORD;
 	reg [15:0]counter;     //UART counter
-	reg [15:0]recvCounter; //receiving's counter
 
     transmitter tmt(
     RsTx, // Transmitter serial output. TxD will be held high during reset, or when no transmissions aretaking place. 
@@ -57,6 +60,7 @@ module Keyboard(
 	reg [3:0]COUNT;				//tells how many bits were received until now (from 0 to 11)
 	reg TRIGGER = 0;			//This acts as a 250 times slower than the board clock. 
 	reg [7:0]DOWNCOUNTER = 0;		//This is used together with TRIGGER - look the code
+	reg [15:0] ledCounter;
 
 	//Set initial values
 	initial begin
@@ -66,12 +70,15 @@ module Keyboard(
 		COUNT = 0;			
 		CODEWORD = 0;
 		led = 0;
+		ledCounter = 0;
 		read = 0;
 		count_reading = 0;
 		data = 8'h00;
 		transmit = 0;
 		counter = 0;
-		receiving = 0;
+		receiveState = 0;
+		receiveCounter = 0;
+		checkWORD = 8'h00;
 	end
 
 	always @(posedge clk) begin				//This reduces the frequency 250 times
@@ -143,13 +150,31 @@ module Keyboard(
 		end
 		else CODEWORD <= 8'd0;					//no clock trigger, no data…
 	end
+
 	
 	always @(posedge clk) begin
-	    if (receiving==0)
-	        begin 
-            if (CODEWORD != 8'd0 && transmit==0)
-                begin
-                case(CODEWORD)
+        if (data != "" && transmit==0)
+            begin
+            transmit=1;
+            counter=0;
+            end
+        else if (transmit==1 && counter<=10415)
+            counter=counter+1;
+        else
+            begin
+            transmit = 0;
+            end
+	end
+	
+	
+	always @(posedge clk)
+	begin
+	case (receiveState)
+	0:
+	    begin
+        if (CODEWORD != 8'hf0)
+            begin
+            case(CODEWORD)
                 8'h16: data="1";
                 8'h1E: data="2";
                 8'h26: data="3";
@@ -196,45 +221,47 @@ module Keyboard(
                 8'h49: data=".";
                 8'h4A: data="/";
                 8'h29: data=" ";
-                8'hf0: data="";
+                //8'hf0: data="";
                 endcase
-                transmit=1;
-                counter=0;
-                end
-            else if (transmit==1 && counter<=10415)
-                counter=counter+1;
-            else
-                begin
-                transmit = 0;
-                data="";
-                end
-	        //if(CODEWORD==8'hf0) receiving=1;
-	        end
-	    else if (receiving==1)
-	        if(CODEWORD!=8'h00 && CODEWORD!=8'hf0)
-	            begin
-	            data="";
-	            receiving=2;
-	            end
-	    else if (receiving==2)
-	        if(CODEWORD==8'h00) receiving=0;
+//                receiveState = 3;
+            end
+        else receiveState = 1;
+//        receiveCounter = 0;
+        end
+	1:
+	    if (CODEWORD!=8'hf0 && CODEWORD!=8'h00)
+	    begin
+	        data="";
+	        checkWORD <= CODEWORD;
+	        receiveState = 2;
+	    end
+	2:
+	    if (CODEWORD!=checkWORD) receiveState=0;
+//	3:
+//	    begin
+//	    receiveCounter <= receiveCounter + 1;
+//	    if (receiveCounter > 1) receiveState=0;
+//	    end
+	endcase
 	end
+	
 	
 	always @(posedge clk)
 	begin
-	   case(data)
-	   "i": led[3:0]=4'b0001; 
-	   "o": led[3:0]=4'b0010;
-	   "p": led[3:0]=4'b0100;
-	   default: led[3:0]=4'b0000;
-	   endcase
-	   
-	   case(CODEWORD)
-	   8'h43: led[7:4]=4'b0001;
-       8'h44: led[7:4]=4'b0010;
-       8'h4D: led[7:4]=4'b0100;
-       default: led[7:4]=4'b0000;
-       endcase
+	    if (ledCounter>10000)
+           begin
+           case(CODEWORD)
+           8'h43: led=8'b00000001; 
+           8'h44: led=8'b00000010;
+           8'h4D: led=8'b00000100;
+           8'hf0: led=8'b00001000;
+           8'h00: led=8'b11110000;
+           default:led=8'b00000000;
+           endcase
+           ledCounter = 0;
+           end
+        else
+           ledCounter <= ledCounter + 1;
 	end
 
 endmodule
