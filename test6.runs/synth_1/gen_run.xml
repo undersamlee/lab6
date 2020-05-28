@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1590324406">
+<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1590326321">
   <File Type="PA-TCL" Name="vga_test.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="vga_test_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="vga_test_reports.tcl"/>

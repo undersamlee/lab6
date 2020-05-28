@@ -55,8 +55,10 @@ module vga_test
     wire [9:0] monster_x_next,monster_y_next;
     wire [9:0] player_range,monster_range;
     wire [9:0] player_hp,monster_hp;
+    
+    reg isDamage=0;
         
-    player p1 (player_x,player_y,direc,clk,player_x_next,player_y_next,player_range,player_hp);
+    player p1 (player_x,player_y,direc,isDamage,clk,player_x_next,player_y_next,player_range,player_hp);
     monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next,monster_range,monster_hp);
     
         // instantiate vga_sync
@@ -78,6 +80,7 @@ module vga_test
         wire isPlayer,isMonster,isHitPixel;
         
         reg isHit=0;
+        
         
         Pixel_On_Text2 #(.displayText("*")) player_pixel(
                 clk,
@@ -120,7 +123,7 @@ module vga_test
         always @(posedge p_tick)
         begin
             //if ((player_range*player_range)>(((x-player_x)*(x-player_x))+(((y-player_y)*(y-player_y))))) //player
-            if(isPlayer)
+            if(isPlayer && player_hp>0)
             //else if(player_x-player_range < x && x < player_x+player_range && player_y-player_range < y && y < player_y+player_range)
                 rgb_reg <= 12'hF00; //red
             else if (((220<x && x<225) || (420<x && x<425)) && 140<y && y<345) //border
@@ -131,7 +134,7 @@ module vga_test
             else if(isMonster)
             //else if(monster_x-monster_range < x && x < monster_x+monster_range && monster_y-monster_range < y && y < monster_y+monster_range)
                 rgb_reg <= 12'hFFF; //white
-            else if(100<x && x<100+player_hp*4 && 370<y && y<380) //player_hp
+            else if(100<x && x<100+player_hp*4 && 370<y && y<380 && player_hp>0) //player_hp
                 rgb_reg <= 12'hFF0; //yellow
             else if(isHit && isHitPixel)
                 rgb_reg <= 12'hFAF;
@@ -145,6 +148,8 @@ module vga_test
             if (x==0 && y==0)
             begin
                 newpic <= 1;
+                if(isHit)
+                    
                 isHit <= 0;
             end
             else
@@ -166,7 +171,11 @@ module vga_test
         //UART
         always @(posedge clk)
             begin
-            if (newpic==1 && direc!=0) direc=0;
+            if (newpic==1 && direc!=0)
+                begin
+                direc=0;
+                isDamage = 0;
+                end
             if (state==1 && nextstate==0)
                 begin
                 case (RxData)
@@ -190,9 +199,7 @@ module vga_test
                 transmit = 0;
                 end
             if(isHit)
-                dp = 1;
-            else
-                dp = 0;
+                isDamage = 1;
             end
 
         // output

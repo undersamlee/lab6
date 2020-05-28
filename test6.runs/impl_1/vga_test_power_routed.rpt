@@ -1,7 +1,7 @@
 Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
-| Date             : Sun May 24 19:49:08 2020
+| Date             : Sun May 24 20:20:51 2020
 | Host             : DESKTOP-ND0EAAT running 64-bit major release  (build 9200)
 | Command          : report_power -file vga_test_power_routed.rpt -pb vga_test_power_summary_routed.pb -rpx vga_test_power_routed.rpx
 | Design           : vga_test
@@ -33,7 +33,7 @@ Table of Contents
 | Total On-Chip Power (W)  | 0.081        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.010        |
+| Dynamic (W)              | 0.009        |
 | Device Static (W)        | 0.072        |
 | Effective TJA (C/W)      | 5.0          |
 | Max Ambient (C)          | 84.6         |
@@ -53,15 +53,15 @@ Table of Contents
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
 | Clocks         |     0.002 |        3 |       --- |             --- |
-| Slice Logic    |     0.002 |      699 |       --- |             --- |
-|   LUT as Logic |     0.001 |      307 |     20800 |            1.48 |
+| Slice Logic    |     0.002 |      743 |       --- |             --- |
+|   LUT as Logic |     0.001 |      334 |     20800 |            1.61 |
 |   CARRY4       |    <0.001 |       80 |      8150 |            0.98 |
-|   Register     |    <0.001 |      206 |     41600 |            0.50 |
+|   Register     |    <0.001 |      217 |     41600 |            0.52 |
 |   BUFG         |    <0.001 |        1 |        32 |            3.13 |
-|   Others       |     0.000 |       22 |       --- |             --- |
-| Signals        |     0.002 |      486 |       --- |             --- |
-| Block RAM      |     0.003 |        1 |        50 |            2.00 |
-| I/O            |     0.002 |       19 |       106 |           17.92 |
+|   Others       |     0.000 |       24 |       --- |             --- |
+| Signals        |     0.002 |      507 |       --- |             --- |
+| Block RAM      |     0.002 |        1 |        50 |            2.00 |
+| I/O            |     0.001 |       19 |       106 |           17.92 |
 | Static Power   |     0.072 |          |           |                 |
 | Total          |     0.081 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
@@ -73,7 +73,7 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
 +-----------+-------------+-----------+-------------+------------+
-| Vccint    |       1.000 |     0.018 |       0.008 |      0.010 |
+| Vccint    |       1.000 |     0.017 |       0.007 |      0.010 |
 | Vccaux    |       1.800 |     0.013 |       0.000 |      0.013 |
 | Vcco33    |       3.300 |     0.001 |       0.000 |      0.001 |
 | Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |
@@ -142,9 +142,7 @@ Table of Contents
 +-----------------+-----------+
 | Name            | Power (W) |
 +-----------------+-----------+
-| vga_test        |     0.010 |
-|   hit_pixel     |     0.001 |
-|     FontRom     |     0.001 |
+| vga_test        |     0.009 |
 |   player_pixel  |     0.002 |
 |     FontRom     |     0.002 |
 |   vga_sync_unit |     0.001 |
