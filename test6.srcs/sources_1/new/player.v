@@ -25,12 +25,11 @@ module player(
     input wire [2:0] direc,
     input wire isHit,
     input wire clk,
-    output reg [9:0] x,y,r,hp
+    output reg [9:0] x,y,hp
     );
     
     initial
     begin
-        r = 7;
         hp = 100;
     end
     
@@ -40,13 +39,13 @@ module player(
         begin
         x=x0;
         y=y0;
-        if (direc==1 && y0>=145+r+4)
+        if (direc==1 && y0>=145)
             y=y0-4;
-        else if (direc==2 && x0>=225+r+4)
+        else if (direc==2 && x0>=225)
             x=x0-4;
-        else if (direc==3 && y0<=340-r-4)
+        else if (direc==3 && y0<=340-8)
             y=y0+4;
-        else if (direc==4 && x0<=420-r-4)
+        else if (direc==4 && x0<=420-8)
             x=x0+4;
             
         if(isDamaged==0 && isHit && hp>0)
