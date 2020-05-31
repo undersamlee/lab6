@@ -23,13 +23,8 @@
 module monster(
     input wire [9:0] x0,y0,
     input wire clk,
-    output reg [9:0] x,y,hp
+    output reg [9:0] x,y
     );
-    
-    initial
-    begin
-        hp = 100;
-    end
     
     reg direcX = 0; // 0->left, 1->right
     reg direcY = 0; // 0->down, 1->up

@@ -41,6 +41,7 @@ module vga_test
     wire [9:0] x, y;
     reg [9:0] player_x=320,player_y=240;
     reg [9:0] monster_x=300,monster_y=300;
+    reg [9:0] fight_x=220;
     
     // move
     reg [2:0]direc=0;
@@ -53,8 +54,11 @@ module vga_test
     
     wire [9:0] player_x_next,player_y_next;
     wire [9:0] monster_x_next,monster_y_next;
-    wire [9:0] player_hp,monster_hp;
+    wire [9:0] player_hp;
+    wire [9:0] fight_x_next;
     
+    reg [9:0] monHp = 400; // actual monster hp
+    reg isAct = 0; // is monster acted
     reg isDamage=0;
     wire [26:0] tclk;
     assign tclk[0] =clk;
@@ -73,7 +77,11 @@ module vga_test
 
         
     player p1 (player_x,player_y,direc,isDamage,clk,player_x_next,player_y_next,player_hp);
-    monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next,monster_hp);
+    monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next);
+    reg [1:0] gameState = 0; // 0=home 1=choose 2=dodge 3=attackqy
+    reg [1:0] menuSelected = 0;
+
+    fight f1 (fight_x,clk,fight_x_next);
     
         // instantiate vga_sync
         vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(Hsync), .vsync(Vsync),
@@ -95,11 +103,6 @@ module vga_test
         wire isBumpPixel,isAuPixel,isSmoothPixel,isTigerPixel,isTitlePixel,isShowPressEnterPixel;
         
         reg isHit=0,isStart=0;
-        reg [1:0] scene=0;
-        /*
-            scene 0-> show member
-            scene 1-> game //to be edited
-        */
         
         
         Pixel_On_Text2 #(.displayText("*")) player_pixel(
@@ -197,28 +200,7 @@ module vga_test
         // rgb buffer (color)
         always @(posedge p_tick)
         begin
-        if(scene==1)
-        begin
-            //if ((player_range*player_range)>(((x-player_x)*(x-player_x))+(((y-player_y)*(y-player_y))))) //player
-            if(isPlayer && player_hp>0)
-            //else if(player_x-player_range < x && x < player_x+player_range && player_y-player_range < y && y < player_y+player_range)
-                rgb_reg <= 12'hF00; //red
-            else if (((220<x && x<225) || (420<x && x<425)) && 140<y && y<345) //border
-                rgb_reg <= 12'hFFF; //white
-            else if (((140<y && y<145) || (340<y && y<345)) && 220<x && x<425) //border
-                rgb_reg <= 12'hFFF; //white
-            //else if ((monster_range*monster_range)>(((x-monster_x)*(x-monster_x))+(((y-monster_y)*(y-monster_y))))) //monster
-            else if(isMonster)
-            //else if(monster_x-monster_range < x && x < monster_x+monster_range && monster_y-monster_range < y && y < monster_y+monster_range)
-                rgb_reg <= 12'hFFF; //white
-            else if(100<x && x<100+player_hp*4 && 370<y && y<380 && player_hp>0) //player_hp
-                rgb_reg <= 12'hFF0; //yellow
-            else if(isHit && isHitPixel)
-                rgb_reg <= 12'hFAF;
-            else //blackground
-                rgb_reg <= 12'h000; //black
-        end
-        else if(scene==0)
+        if(gameState==0)
         begin
             if(40<y && y<120 && !isTitlePixel)
                 rgb_reg <= 12'hFFF;
@@ -234,6 +216,39 @@ module vga_test
                 rgb_reg <= {tclk[25:22],4'h7,4'hF};
             else //blackground
                 rgb_reg <= 12'h000; //black
+        end
+        else
+        begin
+            //if ((player_range*player_range)>(((x-player_x)*(x-player_x))+(((y-player_y)*(y-player_y))))) //player
+            if(gameState==2 && isPlayer && player_hp>0)
+            //else if(player_x-player_range < x && x < player_x+player_range && player_y-player_range < y && y < player_y+player_range)
+                rgb_reg <= 12'hF00; //red
+            else if (gameState==2 && ((220<x && x<225) || (420<x && x<425)) && 140<y && y<345) //border
+                rgb_reg <= 12'hFFF; //white
+            else if (gameState==2 && ((140<y && y<145) || (340<y && y<345)) && 220<x && x<425) //border
+                rgb_reg <= 12'hFFF; //white
+            //else if ((monster_range*monster_range)>(((x-monster_x)*(x-monster_x))+(((y-monster_y)*(y-monster_y))))) //monster
+            else if(gameState==2 && isMonster) // bullet (not monster)
+            //else if(monster_x-monster_range < x && x < monster_x+monster_range && monster_y-monster_range < y && y < monster_y+monster_range)
+                rgb_reg <= 12'hFFF; //white
+            else if(gameState!=0 && 100<x && x<100+player_hp*4 && 370<y && y<380 && player_hp>0) //player_hp
+                rgb_reg <= 12'hFF0; //yellow
+            else if(isHit && isHitPixel)
+                rgb_reg <= 12'hFAF;
+            else if(gameState==3 && 345<y && y<355 && 318<x && x<322) // fight target
+                rgb_reg <= 12'h0F0; // green
+            else if(gameState==3 && 355<y && y<365 && fight_x-2<x && x<fight_x+2) // fight
+                rgb_reg <= 12'hFFF; // white
+            else if(gameState!=0 && 100<x && x<100+monHp && 110<y && y<130 && monHp>0) // monster hp
+                rgb_reg <= 12'h0F0; // green
+            else if(gameState==1 && menuSelected==0 && 400<y && y<415 && 100<x && x<115)
+                rgb_reg <= 12'hF00; // red
+            else if(gameState==1 && menuSelected==1 && 400<y && y<415 && 140<x && x<155)
+                rgb_reg <= 12'hF00; // red
+            else if(gameState==1 && menuSelected==2 && 400<y && y<415 && 180<x && x<195)
+                rgb_reg <= 12'hF00; // red
+            else //blackground
+                rgb_reg <= 12'h000; // black
         end
         end
         
@@ -257,10 +272,14 @@ module vga_test
         //move
         always @(posedge newpic)
         begin
-            player_x = player_x_next;
-            player_y = player_y_next;
-            monster_x = monster_x_next;
-            monster_y = monster_y_next;
+            if(gameState==2) begin
+                player_x = player_x_next;
+                player_y = player_y_next;
+                monster_x = monster_x_next;
+                monster_y = monster_y_next;
+                end
+            if(gameState==3)
+                fight_x = fight_x_next;
         end
         
         //UART
@@ -275,15 +294,16 @@ module vga_test
             if (state==1 && nextstate==0)
                 begin
                 case (RxData)
-                "w": begin direc=1; TxData="W"; end
-                "a": begin direc=2; TxData="A"; end
-                "s": begin direc=3; TxData="S"; end
-                "d": begin direc=4; TxData="D"; end
+                "w": begin if(gameState==2) direc=1; TxData="W"; end
+                "a": begin if(gameState==2) direc=2; TxData="A"; end
+                "s": begin if(gameState==2) direc=3; TxData="S"; end
+                "d": begin if(gameState==2) direc=4; else if(gameState==1) menuSelected=menuSelected+1; if(menuSelected==3) menuSelected=0; TxData="D"; end
                 "c": begin color=0; direc=0; TxData="C"; end
-                "m": begin color=1; direc=0; TxData="M"; end
-                "y": begin color=2; direc=0; TxData="Y"; end
-                " ": begin color=3; direc=0; TxData="Z"; end
                 "q": begin isStart=1; TxData="Z"; end
+                "m": begin if(gameState==3) monHp=400; TxData="M"; end
+                "y": begin gameState=gameState+1; if(gameState==4) gameState=0; TxData="Y"; end
+                //monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x);
+                " ": begin if(gameState==3) monHp=monHp-100; TxData="Z"; end
                 default: begin TxData=""; end
                 endcase 
                 transmit = 1;
@@ -297,15 +317,15 @@ module vga_test
                 end
             if(isHit)
                 isDamage = 1;
-            if(scene ==0 && isStart)
-                scene =1;
-            else if(scene ==1 && xCounter>=5)
-                scene =0;
+            if(gameState ==0 && isStart)
+                gameState =1;
+            else if(gameState ==2 && xCounter>=5)
+                gameState =0;
             end
             
         always @(posedge clkS)
             begin
-            if(scene==1)
+            if(gameState==2)
                 xCounter = xCounter+1;
             else
                 xCounter = 0;
