@@ -29,26 +29,24 @@ module Keyboard(
 //	output reg [3:0]COUNT,
 //	output reg TRIG_ARR,
 //	output reg [7:0]CODEWORD,
-   output reg [7:0] led,	//8 LEDs
-//   output reg [7:0] data
-   output wire RsTx
+//   output reg [7:0] led,	//8 LEDs
+   output reg [7:0] data
+//   output wire RsTx
    );
    
 	reg [1:0]receiveState;         //receive state of ps2data
-	reg [15:0]receiveCounter;
 
-    reg [7:0] data;
-	reg transmit;          //UART transmitter's transmit signal
+//	reg transmit;          //UART transmitter's transmit signal
 	reg [7:0]checkWORD;
-	reg [15:0]counter;     //UART counter
+//	reg [15:0]counter;     //UART counter
 
-    transmitter tmt(
-    RsTx, // Transmitter serial output. TxD will be held high during reset, or when no transmissions aretaking place. 
-    clk, //UART input clock
-    0, // reset signal
-    transmit, //btn signal to trigger the UART communication
-    data // data transmitted
-    );
+//    transmitter tmt(
+//    RsTx, // Transmitter serial output. TxD will be held high during reset, or when no transmissions aretaking place. 
+//    clk, //UART input clock
+//    0, // reset signal
+//    transmit, //btn signal to trigger the UART communication
+//    data // data transmitted
+//    );
 
 	reg read;				//this is 1 if still waits to receive more bits 
 	reg [11:0] count_reading;		//this is used to detect how much time passed since it received the previous codeword
@@ -60,7 +58,6 @@ module Keyboard(
 	reg [3:0]COUNT;				//tells how many bits were received until now (from 0 to 11)
 	reg TRIGGER = 0;			//This acts as a 250 times slower than the board clock. 
 	reg [7:0]DOWNCOUNTER = 0;		//This is used together with TRIGGER - look the code
-	reg [15:0] ledCounter;
 
 	//Set initial values
 	initial begin
@@ -69,15 +66,10 @@ module Keyboard(
 		scan_code = 0;
 		COUNT = 0;			
 		CODEWORD = 0;
-		led = 0;
-		ledCounter = 0;
 		read = 0;
 		count_reading = 0;
 		data = 8'h00;
-		transmit = 0;
-		counter = 0;
 		receiveState = 0;
-		receiveCounter = 0;
 		checkWORD = 8'h00;
 	end
 
@@ -152,21 +144,6 @@ module Keyboard(
 	end
 
 	
-	always @(posedge clk) begin
-        if (data != "" && transmit==0)
-            begin
-            transmit=1;
-            counter=0;
-            end
-        else if (transmit==1 && counter<=10415)
-            counter=counter+1;
-        else
-            begin
-            transmit = 0;
-            end
-	end
-	
-	
 	always @(posedge clk)
 	begin
 	case (receiveState)
@@ -221,12 +198,19 @@ module Keyboard(
                 8'h49: data=".";
                 8'h4A: data="/";
                 8'h29: data=" ";
+                8'h66: data=8;  //backspace
+                8'h0D: data=09; //tab
+                8'h76: data=27; //ESC
+                8'h5A: data=10; //Enter
+                8'h75: data=38; //up
+                8'h72: data=40; //down
+                8'h6B: data=37; //left
+                8'h74: data=39; //right
                 //8'hf0: data="";
+                default: data="";
                 endcase
-//                receiveState = 3;
             end
         else receiveState = 1;
-//        receiveCounter = 0;
         end
 	1:
 	    if (CODEWORD!=8'hf0 && CODEWORD!=8'h00)
@@ -237,34 +221,11 @@ module Keyboard(
 	    end
 	2:
 	    if (CODEWORD!=checkWORD) receiveState=0;
-//	3:
-//	    begin
-//	    receiveCounter <= receiveCounter + 1;
-//	    if (receiveCounter > 1) receiveState=0;
-//	    end
 	endcase
 	end
-	
-	
-	always @(posedge clk)
-	begin
-	    if (ledCounter>10000)
-           begin
-           case(CODEWORD)
-           8'h43: led=8'b00000001; 
-           8'h44: led=8'b00000010;
-           8'h4D: led=8'b00000100;
-           8'hf0: led=8'b00001000;
-           8'h00: led=8'b11110000;
-           default:led=8'b00000000;
-           endcase
-           ledCounter = 0;
-           end
-        else
-           ledCounter <= ledCounter + 1;
-	end
-
+    
 endmodule
+
 
 
 

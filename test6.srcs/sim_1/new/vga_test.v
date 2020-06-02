@@ -23,6 +23,9 @@ module vga_test
 	(
 		input wire clk, reset,
 		input wire RsRx,
+		input wire PS2Clk,
+		input wire PS2Data,
+		input wire [3:0] sw,
 		output wire Hsync, Vsync,
 		output wire [3:0] vgaRed,
 		output wire [3:0] vgaGreen,
@@ -87,6 +90,10 @@ module vga_test
         vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(Hsync), .vsync(Vsync),
                                 .video_on(video_on), .p_tick(p_tick), .x(x), .y(y));
    
+        //Keyboard
+        wire [7:0] keyData;
+        Keyboard(clk, PS2Clk, PS2Data, keyData);
+   
         //Receiver
         wire [7:0]RxData;
         wire state;
@@ -97,7 +104,10 @@ module vga_test
         reg [7:0]TxData;
         reg transmit;
         reg [15:0]counter;
-        transmitter(RsTx, clk, 0, transmit, TxData);
+        transmitter(RsTx, clk, 0, transmit, keyData);
+        
+        wire [7:0] data;
+        assign data = (sw==1? keyData: RxData);
         
         wire isPlayer,isMonster,isHitPixel,isEndPixel;
         wire isBumpPixel,isAuPixel,isSmoothPixel,isTigerPixel,isTitlePixel,isShowPressEnterPixel;
@@ -150,7 +160,7 @@ module vga_test
                 isAuPixel  // result, 1 if current pixel is on text, 0 otherwise
             );
             
-        Pixel_On_Text2 #(.displayText("Purinut Thedwichienchai    60310xxx21")) showSmooth(
+        Pixel_On_Text2 #(.displayText("Purinut Thedwichienchai    6031046721")) showSmooth(
                 clk,
                 170, // text position.x (top left)
                 250, // text position.y (top left)
@@ -160,7 +170,7 @@ module vga_test
             );
             
             
-        Pixel_On_Text2 #(.displayText("Tanakoen Pisnupoomi        60310xxx21")) showTiger(
+        Pixel_On_Text2 #(.displayText("Tanakorn Pisnupoomi        60310xxx21")) showTiger(
                 clk,
                 170, // text position.x (top left)
                 270, // text position.y (top left)
@@ -190,7 +200,7 @@ module vga_test
         //initialize
         initial
         begin
-            transmit = 0;
+            transmit = 1;
             counter = 0;
             direc = 0;
             color = 3;
@@ -282,7 +292,7 @@ module vga_test
                 fight_x = fight_x_next;
         end
         
-        //UART
+        //Control
         always @(posedge clk)
             begin
             if (newpic==1 && direc!=0)
@@ -291,30 +301,30 @@ module vga_test
                 isDamage = 0;
                 isStart=0;
                 end
-            if (state==1 && nextstate==0)
-                begin
-                case (RxData)
-                "w": begin if(gameState==2) direc=1; TxData="W"; end
-                "a": begin if(gameState==2) direc=2; TxData="A"; end
-                "s": begin if(gameState==2) direc=3; TxData="S"; end
-                "d": begin if(gameState==2) direc=4; else if(gameState==1) menuSelected=menuSelected+1; if(menuSelected==3) menuSelected=0; TxData="D"; end
-                "c": begin color=0; direc=0; TxData="C"; end
-                "q": begin isStart=1; TxData="Z"; end
-                "m": begin if(gameState==3) monHp=400; TxData="M"; end
-                "y": begin gameState=gameState+1; if(gameState==4) gameState=0; TxData="Y"; end
+//            if (state==1 && nextstate==0)
+//                begin
+                case (keyData)
+                "w": begin if(gameState==2) direc=1; end
+                "a": begin if(gameState==2) direc=2; end
+                "s": begin if(gameState==2) direc=3; end
+                "d": begin if(gameState==2) direc=4; else if(gameState==1) menuSelected=menuSelected+1; if(menuSelected==3) menuSelected=0; end
+                "c": begin color=0; direc=0; end
+                "q": begin isStart=1; end
+                "m": begin if(gameState==3) monHp=400; end
+                "y": begin gameState=gameState+1; if(gameState==4) gameState=0; end
                 //monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x);
-                " ": begin if(gameState==3) monHp=monHp-100; TxData="Z"; end
-                default: begin TxData=""; end
+                " ": begin if(gameState==3) monHp=monHp-100; end
+//                default: begin TxData=""; end
                 endcase 
-                transmit = 1;
-                counter = 0;
-                end
-            else if (transmit==1 && counter<=10415)
-                counter=counter+1;
-            else
-                begin
-                transmit = 0;
-                end
+//                transmit = 1;
+//                counter = 0;
+//                end
+//            else if (transmit==1 && counter<=10415)
+//                counter=counter+1;
+//            else
+//                begin
+//                transmit = 0;
+//                end
             if(isHit)
                 isDamage = 1;
             if(gameState ==0 && isStart)
@@ -330,7 +340,7 @@ module vga_test
             else
                 xCounter = 0;
             end
-
+ 
         // output
         assign {vgaRed,vgaGreen,vgaBlue} = (video_on) ? rgb_reg : 12'b0;
 endmodule
