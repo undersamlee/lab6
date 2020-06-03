@@ -24,6 +24,7 @@ module player(
     input wire [9:0] x0,y0,
     input wire [2:0] direc,
     input wire isHit,
+    input wire isHeal,
     input wire clk,
     output reg [9:0] x,y,hp
     );
@@ -34,6 +35,7 @@ module player(
     end
     
     reg isDamaged = 0;
+    reg isMended = 0;
     
     always @(posedge clk)
         begin
@@ -55,6 +57,15 @@ module player(
         end
         else if(isHit == 0)
             isDamaged = 0;
+        
+        if(isMended==0 && isHeal && hp<100)
+        begin
+            if(100-hp>10) hp=hp+10;
+            else hp=100;
+            isMended = 1;
         end
-    
+        else if(isHeal == 0)
+            isMended = 0;
+        end
+        
 endmodule

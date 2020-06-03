@@ -62,6 +62,8 @@ module vga_test
     reg [9:0] monHp = 400; // actual monster hp
     reg isAct = 0; // is monster acted
     reg isDamage=0;
+    reg isHeal=0;
+    reg [2:0] potionCount=4;
     wire [26:0] tclk;
     assign tclk[0] =clk;
     wire clkS;
@@ -78,9 +80,9 @@ module vga_test
     divClock dClock(clkS,tclk[26]);
 
         
-    player p1 (player_x,player_y,direc,isDamage,clk,player_x_next,player_y_next,player_hp);
+    player p1 (player_x,player_y,direc,isDamage,isHeal,clk,player_x_next,player_y_next,player_hp);
     monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next);
-    reg [2:0] gameState = 0; // 0=home 1=choose 2=dodge 3=attackqy
+    reg [2:0] gameState = 0; // 0=home 1=choose 2=dodge 3=attackqy 4=item
     reg [1:0] menuSelected = 0;
 
     fight f1 (fight_x,clk,fight_x_next);
@@ -108,6 +110,7 @@ module vga_test
         wire isPlayer,isMonster,isHitPixel,isEndPixel;
         wire isBumpPixel,isAuPixel,isSmoothPixel,isTigerPixel,isTitlePixel,isShowPressEnterPixel;
         wire isFightPixel, isActPixel, isItemPixel, isMercyPixel;
+        wire isPotionPixel0, isPotionPixel1, isPotionPixel2, isPotionPixel3;
         
         reg isHit=0,isStart=0;
         
@@ -229,6 +232,42 @@ module vga_test
                 y, // current position.y
                 isMercyPixel  // result, 1 if current pixel is on text, 0 otherwise
             );
+         
+         Pixel_On_Text2 #(.displayText("HP Potion")) showPotion0(
+                clk,
+                140, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isPotionPixel0  // result, 1 if current pixel is on text, 0 otherwise
+            );
+            
+         Pixel_On_Text2 #(.displayText("HP Potion")) showPotion1(
+                clk,
+                240, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isPotionPixel1  // result, 1 if current pixel is on text, 0 otherwise
+            ); 
+            
+         Pixel_On_Text2 #(.displayText("HP Potion")) showPotion2(
+                clk,
+                340, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isPotionPixel2  // result, 1 if current pixel is on text, 0 otherwise
+            ); 
+            
+         Pixel_On_Text2 #(.displayText("HP Potion")) showPotion3(
+                clk,
+                440, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isPotionPixel3  // result, 1 if current pixel is on text, 0 otherwise
+            );  
                    
         //initialize
         initial
@@ -284,22 +323,38 @@ module vga_test
                 rgb_reg <= 12'hFFF; // white
             else if(gameState!=0 && 100<x && x<100+monHp && 110<y && y<130 && monHp>0) // monster hp
                 rgb_reg <= 12'h0F0; // green
-            else if(gameState==1 && menuSelected==0 && 400<y && y<415 && 120<x && x<135)
-                rgb_reg <= 12'hF82; // dark orange
-            else if(gameState==1 && menuSelected==1 && 400<y && y<415 && 220<x && x<235)
-                rgb_reg <= 12'hF82; // dark orange
-            else if(gameState==1 && menuSelected==2 && 400<y && y<415 && 320<x && x<335)
-                rgb_reg <= 12'hF82; // dark orange
-            else if(gameState==1 && menuSelected==3 && 400<y && y<415 && 420<x && x<435)
-                rgb_reg <= 12'hF82; // dark orange
+            else if((gameState==1 || gameState==4) && menuSelected==0 && 400<y && y<415 && 120<x && x<135)
+                rgb_reg <= 12'hF00; // red
+            else if((gameState==1 || gameState==4) && menuSelected==1 && 400<y && y<415 && 220<x && x<235)
+                rgb_reg <= 12'hF00; // red
+            else if((gameState==1 || gameState==4) && menuSelected==2 && 400<y && y<415 && 320<x && x<335)
+                rgb_reg <= 12'hF00; // red
+            else if((gameState==1 || gameState==4) && menuSelected==3 && 400<y && y<415 && 420<x && x<435)
+                rgb_reg <= 12'hF00; // red
             else if(gameState==1 && isFightPixel)
-                rgb_reg <= 12'hF82; // dark orange
+                if (menuSelected==0) rgb_reg <= 12'hFFF; // white
+                else rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && isActPixel)
-                rgb_reg <= 12'hF82; // dark orange
+                if (menuSelected==1) rgb_reg <= 12'hFFF; // white
+                else rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && isItemPixel)
-                rgb_reg <= 12'hF82; // dark orange
+                if (menuSelected==2) rgb_reg <= 12'hFFF; // white
+                else rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && isMercyPixel)
-                rgb_reg <= 12'hF82; // dark orange
+                if (menuSelected==3) rgb_reg <= 12'hFFF; // white
+                else rgb_reg <= 12'hF82; // dark orange
+            else if(gameState==4 && isPotionPixel0 && potionCount>0)
+                if (menuSelected==0) rgb_reg <= 12'hFFF; // white
+                else rgb_reg <= 12'hF82; // dark orange
+            else if(gameState==4 && isPotionPixel1 && potionCount>1)
+                if (menuSelected==1) rgb_reg <= 12'hFFF; // white
+                else rgb_reg <= 12'hF82; // dark orange
+            else if(gameState==4 && isPotionPixel2 && potionCount>2)
+                if (menuSelected==2) rgb_reg <= 12'hFFF; // white
+                else rgb_reg <= 12'hF82; // dark orange
+            else if(gameState==4 && isPotionPixel3 && potionCount>3)
+                if (menuSelected==3) rgb_reg <= 12'hFFF; // white
+                else rgb_reg <= 12'hF82; // dark orange
             else //blackground
                 rgb_reg <= 12'h000; // black
         end
@@ -342,30 +397,39 @@ module vga_test
                 begin
                 direc=0;
                 isDamage = 0;
+                isHeal = 0;
                 isStart=0;
                 end
 //            if (state==1 && nextstate==0)
 //                begin
                 case (keyData)
                 "w": begin if(gameState==2) direc=1; end
-                "a": begin if(gameState==2) direc=2; else if(gameState==1) menuSelected=menuSelected-1; end
+                "a": begin if(gameState==2) direc=2;
+                else if(gameState==1 || gameState==4) menuSelected=menuSelected-1;
+                if(gameState==4 && menuSelected>=potionCount) menuSelected=0; end
                 "s": begin if(gameState==2) direc=3; end
-                "d": begin if(gameState==2) direc=4; else if(gameState==1) menuSelected=menuSelected+1; end
+                "d": begin if(gameState==2) direc=4;
+                else if(gameState==1 || gameState==4) menuSelected=menuSelected+1;
+                if(gameState==4 && menuSelected>=potionCount) menuSelected=0; end
                 "c": begin color=0; direc=0; end
                 "q": begin isStart=1; end
                 "m": begin if(gameState==3) monHp=400; end
-                //Enter
-                10: begin 
+                10: begin //Enter
                     case (gameState)
                     0: gameState=1; //home
-                    1: begin if(menuSelected==0)gameState=3; end //choose
+                    1: begin if(menuSelected==0)gameState=3; else if(menuSelected==2) begin gameState=4; menuSelected=0; end end //choose
                     2: gameState=1; //dodge
                     3: gameState=2; //attack
+                    4: if(potionCount>0) begin gameState=2; potionCount=potionCount-1; isHeal=1; end//item
                     endcase
                     end
                 //monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x);
                 " ": begin if(gameState==3) monHp=monHp-100; end
-//                default: begin TxData=""; end
+                27: begin //Esc
+                    case (gameState)
+                    4: gameState=1; //item
+                    endcase
+                    end
                 endcase 
 //                transmit = 1;
 //                counter = 0;
