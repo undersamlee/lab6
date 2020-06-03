@@ -25,7 +25,6 @@ module vga_test
 		input wire RsRx,
 		input wire PS2Clk,
 		input wire PS2Data,
-		input wire [3:0] sw,
 		output wire Hsync, Vsync,
 		output wire [3:0] vgaRed,
 		output wire [3:0] vgaGreen,
@@ -81,7 +80,7 @@ module vga_test
         
     player p1 (player_x,player_y,direc,isDamage,clk,player_x_next,player_y_next,player_hp);
     monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next);
-    reg [1:0] gameState = 0; // 0=home 1=choose 2=dodge 3=attackqy
+    reg [2:0] gameState = 0; // 0=home 1=choose 2=dodge 3=attackqy
     reg [1:0] menuSelected = 0;
 
     fight f1 (fight_x,clk,fight_x_next);
@@ -106,11 +105,9 @@ module vga_test
         reg [15:0]counter;
         transmitter(RsTx, clk, 0, transmit, keyData);
         
-        wire [7:0] data;
-        assign data = (sw==1? keyData: RxData);
-        
         wire isPlayer,isMonster,isHitPixel,isEndPixel;
         wire isBumpPixel,isAuPixel,isSmoothPixel,isTigerPixel,isTitlePixel,isShowPressEnterPixel;
+        wire isFightPixel, isActPixel, isItemPixel, isMercyPixel;
         
         reg isHit=0,isStart=0;
         
@@ -196,7 +193,43 @@ module vga_test
                 y, // current position.y
                 isShowPressEnterPixel  // result, 1 if current pixel is on text, 0 otherwise
             );
+     
+        Pixel_On_Text2 #(.displayText("Fight")) showFight(
+                clk,
+                140, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isFightPixel  // result, 1 if current pixel is on text, 0 otherwise
+            );
+        
+        Pixel_On_Text2 #(.displayText("Act")) showAct(
+                clk,
+                240, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isActPixel  // result, 1 if current pixel is on text, 0 otherwise
+            );
             
+         Pixel_On_Text2 #(.displayText("Item")) showItem(
+                clk,
+                340, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isItemPixel  // result, 1 if current pixel is on text, 0 otherwise
+            );
+            
+         Pixel_On_Text2 #(.displayText("Mercy")) showMercy(
+                clk,
+                440, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isMercyPixel  // result, 1 if current pixel is on text, 0 otherwise
+            );
+                   
         //initialize
         initial
         begin
@@ -251,12 +284,22 @@ module vga_test
                 rgb_reg <= 12'hFFF; // white
             else if(gameState!=0 && 100<x && x<100+monHp && 110<y && y<130 && monHp>0) // monster hp
                 rgb_reg <= 12'h0F0; // green
-            else if(gameState==1 && menuSelected==0 && 400<y && y<415 && 100<x && x<115)
+            else if(gameState==1 && menuSelected==0 && 400<y && y<415 && 120<x && x<135)
                 rgb_reg <= 12'hF00; // red
-            else if(gameState==1 && menuSelected==1 && 400<y && y<415 && 140<x && x<155)
+            else if(gameState==1 && menuSelected==1 && 400<y && y<415 && 220<x && x<235)
                 rgb_reg <= 12'hF00; // red
-            else if(gameState==1 && menuSelected==2 && 400<y && y<415 && 180<x && x<195)
+            else if(gameState==1 && menuSelected==2 && 400<y && y<415 && 320<x && x<335)
                 rgb_reg <= 12'hF00; // red
+            else if(gameState==1 && menuSelected==3 && 400<y && y<415 && 420<x && x<435)
+                rgb_reg <= 12'hF00; // red
+            else if(gameState==1 && isFightPixel)
+                rgb_reg <= 12'hFFF; // white
+            else if(gameState==1 && isActPixel)
+                rgb_reg <= 12'hFFF; // white
+            else if(gameState==1 && isItemPixel)
+                rgb_reg <= 12'hFFF; // white
+            else if(gameState==1 && isMercyPixel)
+                rgb_reg <= 12'hFFF; // white
             else //blackground
                 rgb_reg <= 12'h000; // black
         end
@@ -305,13 +348,21 @@ module vga_test
 //                begin
                 case (keyData)
                 "w": begin if(gameState==2) direc=1; end
-                "a": begin if(gameState==2) direc=2; end
+                "a": begin if(gameState==2) direc=2; else if(gameState==1) menuSelected=menuSelected-1; end
                 "s": begin if(gameState==2) direc=3; end
-                "d": begin if(gameState==2) direc=4; else if(gameState==1) menuSelected=menuSelected+1; if(menuSelected==3) menuSelected=0; end
+                "d": begin if(gameState==2) direc=4; else if(gameState==1) menuSelected=menuSelected+1; end
                 "c": begin color=0; direc=0; end
                 "q": begin isStart=1; end
                 "m": begin if(gameState==3) monHp=400; end
-                "y": begin gameState=gameState+1; if(gameState==4) gameState=0; end
+                //Enter
+                10: begin 
+                    case (gameState)
+                    0: gameState=1; //home
+                    1: gameState=3; //choose
+                    2: gameState=1; //dodge
+                    3: gameState=2; //attack
+                    endcase
+                    end
                 //monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x);
                 " ": begin if(gameState==3) monHp=monHp-100; end
 //                default: begin TxData=""; end
@@ -330,7 +381,7 @@ module vga_test
             if(gameState ==0 && isStart)
                 gameState =1;
             else if(gameState ==2 && xCounter>=5)
-                gameState =0;
+                gameState =1;
             end
             
         always @(posedge clkS)
