@@ -105,7 +105,7 @@ module vga_test
         reg [7:0]TxData;
         reg transmit;
         reg [15:0]counter;
-        transmitter(RsTx, clk, 0, transmit, keyData);
+        transmitter(RsTx, clk, 0, transmit, TxData);
         
         wire isPlayer,isMonster,isHitPixel,isEndPixel;
         wire isBumpPixel,isAuPixel,isSmoothPixel,isTigerPixel,isTitlePixel,isShowPressEnterPixel;
@@ -400,9 +400,9 @@ module vga_test
                 isHeal = 0;
                 isStart=0;
                 end
-//            if (state==1 && nextstate==0)
-//                begin
-                case (keyData)
+            if (state==1 && nextstate==0)
+                begin
+                case (RxData)
                 "w": begin if(gameState==2) direc=1; end
                 "a": begin if(gameState==2) direc=2;
                 else if(gameState==1 || gameState==4) menuSelected=menuSelected-1;
@@ -414,32 +414,32 @@ module vga_test
                 "c": begin color=0; direc=0; end
                 "q": begin isStart=1; end
                 "m": begin if(gameState==3) monHp=400; end
-                10: begin //Enter
+                "y": begin //Enter
                     case (gameState)
                     0: gameState=1; //home
                     1: begin if(menuSelected==0)gameState=3; else if(menuSelected==2) begin gameState=4; menuSelected=0; end end //choose
                     2: gameState=1; //dodge
-                    3: gameState=2; //attack
+                    3: begin gameState=2; monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x); if(monHp>400) gameState=0; end //attack
                     4: if(potionCount>0) begin gameState=2; potionCount=potionCount-1; isHeal=1; end//item
                     endcase
                     end
-                //monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x);
-                " ": begin if(gameState==3) monHp=monHp-100; end
-                27: begin //Esc
+                " ": begin if(gameState==3) monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x); end
+                "u": begin //Esc
                     case (gameState)
                     4: gameState=1; //item
                     endcase
                     end
+                default: TxData="s";
                 endcase 
-//                transmit = 1;
-//                counter = 0;
-//                end
-//            else if (transmit==1 && counter<=10415)
-//                counter=counter+1;
-//            else
-//                begin
-//                transmit = 0;
-//                end
+                transmit = 1;
+                counter = 0;
+                end
+            else if (transmit==1 && counter<=10415)
+                counter=counter+1;
+            else
+                begin
+                transmit = 0;
+                end
             if(isHit)
                 isDamage = 1;
             if(gameState ==0 && isStart)
