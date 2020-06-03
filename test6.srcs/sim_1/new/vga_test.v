@@ -285,21 +285,21 @@ module vga_test
             else if(gameState!=0 && 100<x && x<100+monHp && 110<y && y<130 && monHp>0) // monster hp
                 rgb_reg <= 12'h0F0; // green
             else if(gameState==1 && menuSelected==0 && 400<y && y<415 && 120<x && x<135)
-                rgb_reg <= 12'hF00; // red
+                rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && menuSelected==1 && 400<y && y<415 && 220<x && x<235)
-                rgb_reg <= 12'hF00; // red
+                rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && menuSelected==2 && 400<y && y<415 && 320<x && x<335)
-                rgb_reg <= 12'hF00; // red
+                rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && menuSelected==3 && 400<y && y<415 && 420<x && x<435)
-                rgb_reg <= 12'hF00; // red
+                rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && isFightPixel)
-                rgb_reg <= 12'hFFF; // white
+                rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && isActPixel)
-                rgb_reg <= 12'hFFF; // white
+                rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && isItemPixel)
-                rgb_reg <= 12'hFFF; // white
+                rgb_reg <= 12'hF82; // dark orange
             else if(gameState==1 && isMercyPixel)
-                rgb_reg <= 12'hFFF; // white
+                rgb_reg <= 12'hF82; // dark orange
             else //blackground
                 rgb_reg <= 12'h000; // black
         end
@@ -358,7 +358,7 @@ module vga_test
                 10: begin 
                     case (gameState)
                     0: gameState=1; //home
-                    1: gameState=3; //choose
+                    1: begin if(menuSelected==0)gameState=3; end //choose
                     2: gameState=1; //dodge
                     3: gameState=2; //attack
                     endcase
