@@ -112,7 +112,7 @@ module vga_test
         wire isFightPixel, isActPixel, isItemPixel, isMercyPixel;
         wire isPotionPixel0, isPotionPixel1, isPotionPixel2, isPotionPixel3;
         
-        reg isHit=0,isStart=0;
+        reg isHit=0;
         
         
         Pixel_On_Text2 #(.displayText("*")) player_pixel(
@@ -296,9 +296,9 @@ module vga_test
             if(gameState==2 && isPlayer && player_hp>0)
             //else if(player_x-player_range < x && x < player_x+player_range && player_y-player_range < y && y < player_y+player_range)
                 rgb_reg <= 12'hF00; //red
-            else if (gameState==2 && ((220<x && x<225) || (420<x && x<425)) && 140<y && y<345) //border
+            else if (gameState==2 && ((215<x && x<220) || (420<x && x<425)) && 135<y && y<345) //border
                 rgb_reg <= 12'hFFF; //white
-            else if (gameState==2 && ((140<y && y<145) || (340<y && y<345)) && 220<x && x<425) //border
+            else if (gameState==2 && ((135<y && y<140) || (340<y && y<345)) && 215<x && x<425) //border
                 rgb_reg <= 12'hFFF; //white
             //else if ((monster_range*monster_range)>(((x-monster_x)*(x-monster_x))+(((y-monster_y)*(y-monster_y))))) //monster
             else if(gameState==2 && isMonster && !isHit) // bullet (not monster)
@@ -381,7 +381,6 @@ module vga_test
                 direc=0;
                 isDamage = 0;
                 isHeal = 0;
-                isStart=0;
                 end
             if (state==1 && nextstate==0 && transmit==0)
                 begin
@@ -395,16 +394,14 @@ module vga_test
                 else if(gameState==1 || gameState==4) menuSelected=menuSelected+1;
                 if(gameState==4 && menuSelected>=potionCount) menuSelected=0; end
                 "c": begin color=0; direc=0; end
-                "q": begin isStart=1; end
                 "y": begin //Enter
                     case (gameState)
                     0: gameState=1; //home
                     1: begin if(menuSelected==0)gameState=3; else if(menuSelected==2) begin gameState=4; menuSelected=0; end end //choose
-                    3: begin gameState=2; monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x); if(monHp>400) gameState=0; end //attack
+                    3: begin monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x); if(monHp>400) gameState=0; else gameState=2; end //attack
                     4: if(potionCount>0) begin gameState=2; potionCount=potionCount-1; isHeal=1; end//item
                     endcase
                     end
-                " ": begin if(gameState==3) monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x); end
                 "u": begin //Esc
                     case (gameState)
                     4: gameState=1; //item
@@ -417,16 +414,13 @@ module vga_test
             else if (transmit==1 && counter<=10415)
                 counter=counter+1;
             else
-                begin
                 transmit = 0;
-                end
             if(isPlayer && isMonster && player_hp>0 && !isHit)
                 begin
                 isHit <= 1;
                 isDamage <= 1;
                 end
-            if(gameState ==0 && isStart)
-                gameState =1;
+            if (player_hp > 100 || player_hp <= 0) gameState = 0;
             else if(gameState ==2 && xCounter>=5)
                 begin
                 gameState =1;

@@ -41,13 +41,13 @@ module player(
         begin
         x=x0;
         y=y0;
-        if (direc==1 && y0>=145)
+        if (direc==1 && y0>140-4)
             y=y0-4;
-        else if (direc==2 && x0>=225)
+        else if (direc==2 && x0>220)
             x=x0-4;
-        else if (direc==3 && y0<=340-8)
+        else if (direc==3 && y0<340-12)
             y=y0+4;
-        else if (direc==4 && x0<=420-8)
+        else if (direc==4 && x0<420-8)
             x=x0+4;
             
         if(isDamaged==0 && isHit && hp>0)
