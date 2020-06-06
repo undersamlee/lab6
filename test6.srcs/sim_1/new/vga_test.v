@@ -132,15 +132,6 @@ module vga_test
                 y, // current position.y
                 isMonster  // result, 1 if current pixel is on text, 0 otherwise
             );
-        
-        Pixel_On_Text2 #(.displayText("HIT")) hit_pixel(
-                clk,
-                400, // text position.x (top left)
-                400, // text position.y (top left)
-                x, // current position.x
-                y, // current position.y
-                isHitPixel  // result, 1 if current pixel is on text, 0 otherwise
-            );
             
         Pixel_On_Text2 #(.displayText("Dolwijit Jiradilok         6031310321")) showBump(
                 clk,
@@ -310,13 +301,11 @@ module vga_test
             else if (gameState==2 && ((140<y && y<145) || (340<y && y<345)) && 220<x && x<425) //border
                 rgb_reg <= 12'hFFF; //white
             //else if ((monster_range*monster_range)>(((x-monster_x)*(x-monster_x))+(((y-monster_y)*(y-monster_y))))) //monster
-            else if(gameState==2 && isMonster) // bullet (not monster)
+            else if(gameState==2 && isMonster && !isHit) // bullet (not monster)
             //else if(monster_x-monster_range < x && x < monster_x+monster_range && monster_y-monster_range < y && y < monster_y+monster_range)
                 rgb_reg <= 12'hFFF; //white
             else if(gameState!=0 && 100<x && x<100+player_hp*4 && 370<y && y<380 && player_hp>0) //player_hp
                 rgb_reg <= 12'hFF0; //yellow
-            else if(isHit && isHitPixel)
-                rgb_reg <= 12'hFAF;
             else if(gameState==3 && 345<y && y<355 && 318<x && x<322) // fight target
                 rgb_reg <= 12'h0F0; // green
             else if(gameState==3 && 355<y && y<365 && fight_x-2<x && x<fight_x+2) // fight
@@ -366,15 +355,9 @@ module vga_test
             if (x==0 && y==0)
             begin
                 newpic <= 1;
-                if(isHit)
-                    
-                isHit <= 0;
             end
             else
                 newpic <= 0;
-            
-            if(isPlayer && isMonster && player_hp>0)
-                isHit <= 1;
         end
             
         //move
@@ -413,12 +396,10 @@ module vga_test
                 if(gameState==4 && menuSelected>=potionCount) menuSelected=0; end
                 "c": begin color=0; direc=0; end
                 "q": begin isStart=1; end
-//                "m": begin if(gameState==3) monHp=400; end
                 "y": begin //Enter
                     case (gameState)
                     0: gameState=1; //home
                     1: begin if(menuSelected==0)gameState=3; else if(menuSelected==2) begin gameState=4; menuSelected=0; end end //choose
-//                    2: gameState=1; //dodge
                     3: begin gameState=2; monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x); if(monHp>400) gameState=0; end //attack
                     4: if(potionCount>0) begin gameState=2; potionCount=potionCount-1; isHeal=1; end//item
                     endcase
@@ -439,12 +420,18 @@ module vga_test
                 begin
                 transmit = 0;
                 end
-            if(isHit)
-                isDamage = 1;
+            if(isPlayer && isMonster && player_hp>0 && !isHit)
+                begin
+                isHit <= 1;
+                isDamage <= 1;
+                end
             if(gameState ==0 && isStart)
                 gameState =1;
             else if(gameState ==2 && xCounter>=5)
+                begin
                 gameState =1;
+                isHit <= 0;
+                end
             end
             
         always @(posedge clkS)
