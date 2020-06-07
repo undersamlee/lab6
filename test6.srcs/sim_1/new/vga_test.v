@@ -161,7 +161,7 @@ module vga_test
             );
             
             
-        Pixel_On_Text2 #(.displayText("Tanakorn Pisnupoomi        60310xxx21")) showTiger(
+        Pixel_On_Text2 #(.displayText("Tanakorn Pisnupoomi        6031017521")) showTiger(
                 clk,
                 170, // text position.x (top left)
                 270, // text position.y (top left)
