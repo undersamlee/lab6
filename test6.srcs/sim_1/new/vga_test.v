@@ -61,7 +61,9 @@ module vga_test
     reg isAct = 0; // is monster acted
     reg isDamage=0;
     reg isHeal=0;
+    reg isActed=0;
     reg [2:0] potionCount=4;
+    reg isFinishedDodge=0;
     wire [26:0] tclk;
     assign tclk[0] =clk;
     wire clkS;
@@ -80,7 +82,7 @@ module vga_test
         
     player p1 (player_x,player_y,direc,isDamage,isHeal,clk,player_x_next,player_y_next,player_hp);
     monster m1 (monster_x,monster_y,clk,monster_x_next,monster_y_next);
-    reg [2:0] gameState = 0; // 0=home 1=choose 2=dodge 3=attackqy 4=item
+    reg [2:0] gameState = 0; // 0=home 1=choose 2=dodge 3=attackqy 4=item 5=act 6=mercy
     reg [1:0] menuSelected = 0;
 
     fight f1 (fight_x,clk,fight_x_next);
@@ -97,6 +99,7 @@ module vga_test
         wire isBumpPixel,isAuPixel,isSmoothPixel,isTigerPixel,isTitlePixel,isShowPressEnterPixel;
         wire isFightPixel, isActPixel, isItemPixel, isMercyPixel;
         wire isPotionPixel0, isPotionPixel1, isPotionPixel2, isPotionPixel3;
+        wire isActingPixel, isSparePixel;
         
         reg isHit=0;
         
@@ -147,7 +150,7 @@ module vga_test
             );
             
             
-        Pixel_On_Text2 #(.displayText("Tanakorn Pisnupoomi        60310xxx21")) showTiger(
+        Pixel_On_Text2 #(.displayText("Tanakorn Pisnupoomi        6031017521")) showTiger(
                 clk,
                 170, // text position.x (top left)
                 270, // text position.y (top left)
@@ -244,7 +247,25 @@ module vga_test
                 x, // current position.x
                 y, // current position.y
                 isPotionPixel3  // result, 1 if current pixel is on text, 0 otherwise
+            );
+            
+          Pixel_On_Text2 #(.displayText("Acting")) showActing(
+                clk,
+                140, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isActingPixel  // result, 1 if current pixel is on text, 0 otherwise
             );  
+            
+          Pixel_On_Text2 #(.displayText("Spare")) showSpare(
+                clk,
+                140, // text position.x (top left)
+                400, // text position.y (top left)
+                x, // current position.x
+                y, // current position.y
+                isSparePixel  // result, 1 if current pixel is on text, 0 otherwise
+            ); 
                    
         //initialize
         initial
@@ -324,6 +345,16 @@ module vga_test
             else if(gameState==4 && isPotionPixel3 && potionCount>3)
                 if (menuSelected==3) rgb_reg <= 12'hFFF; // white
                 else rgb_reg <= 12'hF82; // dark orange
+            else if(gameState==5 && isActingPixel)
+                rgb_reg <= 12'hFFF; //white
+            else if(gameState==5 && 400<y && y<415 && 120<x && x<135)
+                rgb_reg <= 12'hF00; // red
+            else if(gameState==6 && isSparePixel && !isActed)
+                rgb_reg <= 12'hFFF; //white
+            else if(gameState==6 && isSparePixel && isActed)
+                rgb_reg <= 12'hFF0; //yellow
+            else if(gameState==6 && 400<y && y<415 && 120<x && x<135)
+                rgb_reg <= 12'hF00; // red
             else //blackground
                 rgb_reg <= 12'h000; // black
         end
@@ -375,14 +406,21 @@ module vga_test
                 10: begin //Enter
                     case (gameState)
                     0: gameState=1; //home
-                    1: begin if(menuSelected==0)gameState=3; else if(menuSelected==2) begin gameState=4; menuSelected=0; end end //choose
+                    1: begin if(menuSelected==0)gameState=3;
+                    else if(menuSelected==1) gameState=5;
+                    else if(menuSelected==2) begin gameState=4; menuSelected=0; end //choose
+                    else if(menuSelected==3) gameState=6; end
                     3: begin monHp = (fight_x > 320)? monHp-(100-fight_x+320) : monHp-(100-320+fight_x); if(monHp>400) gameState=0; else gameState=2; end //attack
                     4: if(potionCount>0) begin gameState=2; potionCount=potionCount-1; isHeal=1; end//item
+                    5: begin gameState=2; isActed=1; end //act
+                    6: if(isActed) gameState=0; //mercy
                     endcase
                     end
                 27: begin //Esc
                     case (gameState)
                     4: gameState=1; //item
+                    5: gameState=1; //act
+                    6: gameState=1; //mercy
                     endcase
                     end
                 endcase 
