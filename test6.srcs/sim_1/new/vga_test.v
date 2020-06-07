@@ -402,7 +402,6 @@ module vga_test
                 "d": begin if(gameState==2) direc=4;
                 else if(gameState==1 || gameState==4) menuSelected=menuSelected+1;
                 if(gameState==4 && menuSelected>=potionCount) menuSelected=0; end
-                "c": begin color=0; direc=0; end
                 10: begin //Enter
                     case (gameState)
                     0: gameState=1; //home

@@ -16,7 +16,7 @@
 // Revision:
 // Revision 0.01 - File Created
 // Additional Comments:
-// 
+// This code is based on vga_sync.v from https://embeddedthoughts.com/2016/07/29/driving-a-vga-monitor-using-an-fpga/
 //////////////////////////////////////////////////////////////////////////////////
 
 module vga_sync
