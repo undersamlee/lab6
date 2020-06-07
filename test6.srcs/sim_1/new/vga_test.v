@@ -425,8 +425,8 @@ module vga_test
                 endcase 
             if(isPlayer && isMonster && player_hp>0 && !isHit)
                 begin
-                isHit <= 1;
-                isDamage <= 1;
+                isHit = 1;
+                isDamage = 1;
                 end
             if(clkS && !isCounted && gameState==2)
                 begin
@@ -439,7 +439,7 @@ module vga_test
             else if(gameState ==2 && xCounter>=5)
                 begin
                 gameState =1;
-                isHit <= 0;
+                isHit = 0;
                 end
             end
  
