@@ -1,3 +1,5 @@
+-- This code is based on Font_Rom.vhd from https://github.com/Derek-X-Wang/VGA-Text-Generator
+
 -- character ROM
 --   - 8-by-16 (8-by-2^4) font
 --   - 128 (2^7) characters

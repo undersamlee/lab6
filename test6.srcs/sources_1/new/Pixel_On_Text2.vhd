@@ -1,3 +1,5 @@
+-- This code is based on Pixel_On_Text2.vhd from https://github.com/Derek-X-Wang/VGA-Text-Generator
+
 -- Pixel_On_Text2 determines if the current pixel is on text and make it easiler to call from verilog
 -- param:
 --   display text
