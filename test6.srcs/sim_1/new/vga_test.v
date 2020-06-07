@@ -434,8 +434,8 @@ module vga_test
                 xCounter = xCounter+1;
                 isCounted = 1;
                 end
-            else if(clkS && gameState!=2) xCounter = 0;
             else if(!clkS) isCounted = 0;
+            if(gameState!=2) xCounter = 0;
             if (player_hp > 100 || player_hp <= 0) gameState = 0;
             else if(gameState ==2 && xCounter>=5)
                 begin
