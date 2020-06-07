@@ -63,7 +63,7 @@ module vga_test
     reg isHeal=0;
     reg isActed=0;
     reg [2:0] potionCount=4;
-    reg isFinishedDodge=0;
+    reg isCounted=0;
     wire [26:0] tclk;
     assign tclk[0] =clk;
     wire clkS;
@@ -429,20 +429,19 @@ module vga_test
                 isHit <= 1;
                 isDamage <= 1;
                 end
+            if(clkS && !isCounted && gameState==2)
+                begin
+                xCounter = xCounter+1;
+                isCounted = 1;
+                end
+            else if(clkS && gameState!=2) xCounter = 0;
+            else if(!clkS) isCounted = 0;
             if (player_hp > 100 || player_hp <= 0) gameState = 0;
             else if(gameState ==2 && xCounter>=5)
                 begin
                 gameState =1;
                 isHit <= 0;
                 end
-            end
-            
-        always @(posedge clkS)
-            begin
-            if(gameState==2)
-                xCounter = xCounter+1;
-            else
-                xCounter = 0;
             end
  
         // output
