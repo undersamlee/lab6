@@ -22,14 +22,12 @@
 module vga_test
 	(
 		input wire clk, reset,
-		input wire RsRx,
 		input wire PS2Clk,
 		input wire PS2Data,
 		output wire Hsync, Vsync,
 		output wire [3:0] vgaRed,
 		output wire [3:0] vgaGreen,
 		output wire [3:0] vgaBlue,
-		output wire RsTx,
 		output reg dp
 	);
 	
@@ -94,18 +92,6 @@ module vga_test
         //Keyboard
         wire [7:0] keyData;
         Keyboard(clk, PS2Clk, PS2Data, keyData);
-   
-        //Receiver
-        wire [7:0]RxData;
-        wire state;
-        wire nextstate;
-        receiver receiver_unit(RxData, state, nextstate, clk, 0, RsRx);
-        
-        //Transmitter
-        reg [7:0]TxData;
-        reg transmit;
-        reg [15:0]counter;
-        transmitter(RsTx, clk, 0, transmit, TxData);
         
         wire isPlayer,isMonster,isHitPixel,isEndPixel;
         wire isBumpPixel,isAuPixel,isSmoothPixel,isTigerPixel,isTitlePixel,isShowPressEnterPixel;
@@ -161,7 +147,7 @@ module vga_test
             );
             
             
-        Pixel_On_Text2 #(.displayText("Tanakorn Pisnupoomi        6031017521")) showTiger(
+        Pixel_On_Text2 #(.displayText("Tanakorn Pisnupoomi        60310xxx21")) showTiger(
                 clk,
                 170, // text position.x (top left)
                 270, // text position.y (top left)
@@ -263,8 +249,6 @@ module vga_test
         //initialize
         initial
         begin
-            transmit = 1;
-            counter = 0;
             direc = 0;
             color = 3;
             player_x = 320;
@@ -292,17 +276,13 @@ module vga_test
         end
         else
         begin
-            //if ((player_range*player_range)>(((x-player_x)*(x-player_x))+(((y-player_y)*(y-player_y))))) //player
             if(gameState==2 && isPlayer && player_hp>0)
-            //else if(player_x-player_range < x && x < player_x+player_range && player_y-player_range < y && y < player_y+player_range)
                 rgb_reg <= 12'hF00; //red
             else if (gameState==2 && ((215<x && x<220) || (420<x && x<425)) && 135<y && y<345) //border
                 rgb_reg <= 12'hFFF; //white
             else if (gameState==2 && ((135<y && y<140) || (340<y && y<345)) && 215<x && x<425) //border
                 rgb_reg <= 12'hFFF; //white
-            //else if ((monster_range*monster_range)>(((x-monster_x)*(x-monster_x))+(((y-monster_y)*(y-monster_y))))) //monster
             else if(gameState==2 && isMonster && !isHit) // bullet (not monster)
-            //else if(monster_x-monster_range < x && x < monster_x+monster_range && monster_y-monster_range < y && y < monster_y+monster_range)
                 rgb_reg <= 12'hFFF; //white
             else if(gameState!=0 && 100<x && x<100+player_hp*4 && 370<y && y<380 && player_hp>0) //player_hp
                 rgb_reg <= 12'hFF0; //yellow
@@ -382,9 +362,7 @@ module vga_test
                 isDamage = 0;
                 isHeal = 0;
                 end
-            if (state==1 && nextstate==0 && transmit==0)
-                begin
-                case (RxData)
+                case (keyData)
                 "w": begin if(gameState==2) direc=1; end
                 "a": begin if(gameState==2) direc=2;
                 else if(gameState==1 || gameState==4) menuSelected=menuSelected-1;
@@ -394,7 +372,7 @@ module vga_test
                 else if(gameState==1 || gameState==4) menuSelected=menuSelected+1;
                 if(gameState==4 && menuSelected>=potionCount) menuSelected=0; end
                 "c": begin color=0; direc=0; end
-                "y": begin //Enter
+                10: begin //Enter
                     case (gameState)
                     0: gameState=1; //home
                     1: begin if(menuSelected==0)gameState=3; else if(menuSelected==2) begin gameState=4; menuSelected=0; end end //choose
@@ -402,19 +380,12 @@ module vga_test
                     4: if(potionCount>0) begin gameState=2; potionCount=potionCount-1; isHeal=1; end//item
                     endcase
                     end
-                "u": begin //Esc
+                27: begin //Esc
                     case (gameState)
                     4: gameState=1; //item
                     endcase
                     end
                 endcase 
-                transmit = 1;
-                counter = 0;
-                end
-            else if (transmit==1 && counter<=10415)
-                counter=counter+1;
-            else
-                transmit = 0;
             if(isPlayer && isMonster && player_hp>0 && !isHit)
                 begin
                 isHit <= 1;
